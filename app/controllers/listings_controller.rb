@@ -1,6 +1,6 @@
 class ListingsController < ApplicationController
   before_action :set_listing, only: %i[ show edit update destroy ]
-  before_action :set_categories_and_conditions, only: [:new, :edit]
+  before_action :set_form_vars, only: [:new, :edit]
 
   # GET /listings or /listings.json
   def index
@@ -65,11 +65,12 @@ class ListingsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def listing_params
-      params.require(:listing).permit(:title, :price, :category_id, :description, :condition)
+      params.require(:listing).permit(:title, :price, :category_id, :description, :condition, feature_ids: [])
     end
 
-    def set_categories_and_conditions
+    def set_form_vars
       @categories = Category.all
       @conditions = Listing.conditions.keys
+      @features = Feature.all
     end
 end
