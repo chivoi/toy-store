@@ -1,6 +1,6 @@
 class ListingsController < ApplicationController
   before_action :set_listing, only: %i[ show edit update destroy ]
-  before_action :set_categories, only: [:new, :edit]
+  before_action :set_categories_and_conditions, only: [:new, :edit]
 
   # GET /listings or /listings.json
   def index
@@ -68,7 +68,8 @@ class ListingsController < ApplicationController
       params.require(:listing).permit(:title, :price, :category_id, :description, :condition)
     end
 
-    def set_categories
+    def set_categories_and_conditions
       @categories = Category.all
+      @conditions = Listing.conditions.keys
     end
 end
