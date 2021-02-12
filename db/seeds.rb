@@ -22,3 +22,7 @@ if Feature.count == 0
     puts "created #{feature} feature"
   end
 end
+
+if User.count == 0
+  User.create(email: "ana@test.com", password: "password", password_confirmation: "password")
+end
