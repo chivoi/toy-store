@@ -4,7 +4,11 @@
     <% @listings.each do |listing| %>
       <div class="col mb-4">
         <div class='card border-dark h-100'>
-          <%= image_tag "teddy-bear", alt: "cute teddy", class: "thumbnail card-img top" %>
+          <% if listing.picture.attached? %>
+            <%= image_tag listing.picture, alt: "picture of the listing", class: "thumbnail card-img top" %>
+          <%else%>
+            <%= image_tag "teddy-bear", alt: "cute teddy", class: "thumbnail card-img top" %>
+          <%end%>
           <div class='card-body'>
             <h5><%= listing.title %></h5>
             <h6 class='card-subtitle my-2 text-muted'>Added <%= time_ago_in_words(listing.created_at) %> ago</h6>
