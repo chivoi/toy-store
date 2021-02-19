@@ -16,7 +16,11 @@
     <%end%>
     <p class='blockquote mt-2'><%= @listing.description %></p>
     <div class="mt-3 mb-3">
-      <button class='btn btn-primary p-3'>Buy: $ <%=@listing.price %> </button>
+      <%if current_user%>
+        <button data-stripe="payment" class='btn btn-primary p-3'>Buy: $ <%=@listing.price %> </button>
+      <%else%>
+        <%= button_to "Login to buy", new_user_session_path, class: "btn btn-info" %>
+      <%end%>
     </div>
   </div>
 </div>
@@ -26,3 +30,18 @@
     <%= link_to "Delete", @listing, method: :delete, data:{confirm: "Are you sure?"}, class: "btn btn-danger mr-3" if current_user && current_user.id == @listing.user_id  %>
   </div>
 </div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    const button = document.querySelector("[data-stripe='payment']");
+    if (button) {
+      button.addEventListener("click", () => {
+        const stripe = Stripe(
+          "<%=Rails.application.credentials.dig(:stripe, :public_key)%>"
+        );
+        stripe.redirectToCheckout({
+          sessionId: "<%= @session_id%>"
+        });
+      });
+    }
+</script>
