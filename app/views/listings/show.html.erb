@@ -17,7 +17,7 @@
     <p class='blockquote mt-2'><%= @listing.description %></p>
     <div class="mt-3 mb-3">
       <%if current_user && @listing.purchased == false%>
-        <button data-stripe="payment" class='btn btn-primary p-3'>Buy: $ <%=@listing.price %> </button>
+        <button data-stripe="payment" data-session-id=<%=@session_id%> data-public-key=<%=Rails.application.credentials.dig(:stripe, :public_key)%> class='btn btn-primary p-3'>Buy: $ <%=@listing.price %> </button>
       <%elsif @listing.purchased == true%>
         <button class="btn btn-secondary" disabled>SOLD</button>
       <% else %>
@@ -33,17 +33,5 @@
   </div>
 </div>
 
-<script src="https://js.stripe.com/v3/"></script>
-<script>
-    const button = document.querySelector("[data-stripe='payment']");
-    if (button) {
-      button.addEventListener("click", () => {
-        const stripe = Stripe(
-          "<%=Rails.application.credentials.dig(:stripe, :public_key)%>"
-        );
-        stripe.redirectToCheckout({
-          sessionId: "<%= @session_id%>"
-        });
-      });
-    }
-</script>
+<%= javascript_include_tag "https://js.stripe.com/v3/" %>
+<%= javascript_pack_tag "stripe-button" %>
